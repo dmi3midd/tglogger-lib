@@ -34,7 +34,7 @@ class TgLogger {
         this.#levels[level] = isEnabled;
     }
     setPrefix(prefix) {
-        if (typeof prefix !== 'string') throw new Error("Prefix must be string or number");
+        if (typeof prefix !== 'string' && typeof prefix !== null) throw new Error("Prefix must be string or null");
         this.#prefix = prefix;
     }
     disabled() {
