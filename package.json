@@ -2,6 +2,11 @@
   "name": "tglogger-lib",
   "version": "1.0.0",
   "description": "Simple telegram logger",
+  "homepage": "https://github.com/dmi3midd/tglogger-lib#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dmi3midd/tglogger-lib"
+  },
   "keywords": [
     "log",
     "logger",
