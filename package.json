@@ -1,0 +1,14 @@
+{
+  "name": "tglogger-lib",
+  "version": "1.0.0",
+  "description": "Simple telegram logger",
+  "keywords": [
+    "log",
+    "logger",
+    "telegram"
+  ],
+  "license": "MIT",
+  "author": "dmi3mid/dmi3midd",
+  "type": "commonjs",
+  "main": "index.js"
+}
