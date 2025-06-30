@@ -34,12 +34,21 @@ class TgLogger {
     }
 
     setLevel(level, isEnabled) {
-        if (typeof level !== 'string') throw new Error("Level must be a string");
-        if (typeof isEnabled !== 'boolean') throw new Error("isEnabled must be boolean");
+        if (typeof level !== 'string') {
+            // throw new Error("Level must be a string");
+            return;
+        }
+        if (typeof isEnabled !== 'boolean') {
+            // throw new Error("isEnabled must be boolean");
+            return;
+        }
         this.#levels[level.trim().toUpperCase()] = isEnabled;
     }
     setPrefix(prefix) {
-        if (typeof prefix !== 'string' && prefix !== null) throw new Error("Prefix must be a string or null");
+        if (typeof prefix !== 'string' && prefix !== null) {
+            // throw new Error("Prefix must be a string or null");
+            return;
+        }
         this.#prefix = prefix;
     }
     disabled() {
@@ -54,14 +63,14 @@ class TgLogger {
             this.#initQueue(this.#chatIdArr);
             return;
         }
-        throw new Error("The chain is already open");
+        // throw new Error("The chain is already open");
     }
     close() {
         if (this.#isChain) {
             this.#isChain = false;
             return;
         }
-        throw new Error("The chain is already closed");
+        // throw new Error("The chain is already closed");
     }
     start(message) {
         if (this.#levels['START']) {
@@ -75,7 +84,7 @@ class TgLogger {
             this.#chatIdArr.forEach(async id => await this.#sendlog(this.#token, id, msg));
             return;
         }
-        throw new Error("'START' is disabled");
+        // throw new Error("'START' is disabled");
     }
     end(message) {
         if (this.#levels['END']) {
@@ -89,7 +98,7 @@ class TgLogger {
             this.#chatIdArr.forEach(async id => await this.#sendlog(this.#token, id, msg));
             return;
         }
-        throw new Error("'END' is disabled");
+        // throw new Error("'END' is disabled");
     }
     info(message) {
         if (this.#levels['INFO']) {
@@ -103,7 +112,7 @@ class TgLogger {
             this.#chatIdArr.forEach(async id => await this.#sendlog(this.#token, id, msg));
             return;
         }
-        throw new Error("'INFO' is disabled");
+        // throw new Error("'INFO' is disabled");
     }
     warn(message) {
         if (this.#levels['WARN']) {
@@ -117,7 +126,7 @@ class TgLogger {
             this.#chatIdArr.forEach(async id => await this.#sendlog(this.#token, id, msg));
             return;
         }
-        throw new Error("'WARN' is disabled");
+        // throw new Error("'WARN' is disabled");
     }
     error(message) {
         if (this.#levels['ERROR']) {
@@ -131,7 +140,7 @@ class TgLogger {
             this.#chatIdArr.forEach(async id => await this.#sendlog(this.#token, id, msg));
             return;
         }
-        throw new Error("'ERROR' is disabled");
+        // throw new Error("'ERROR' is disabled");
     }
     debug(message) {
         if (this.#levels['DEBUG']) {
@@ -145,7 +154,7 @@ class TgLogger {
             this.#chatIdArr.forEach(async id => await this.#sendlog(this.#token, id, msg));
             return;
         }
-        throw new Error("'DEBUG' is disabled");
+        // throw new Error("'DEBUG' is disabled");
     }
 }
 
