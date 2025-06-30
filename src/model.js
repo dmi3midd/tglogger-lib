@@ -1,5 +1,4 @@
 const { LogQueue } =require('./helpers/LogQueue.js');
-const { getme } = require('./helpers/getme.js');
 const { chatIdArrValidation } = require('./helpers/validators.js');
 const { sendlog } = require('./helpers/sendlog.js');
 
@@ -19,7 +18,6 @@ class TgLogger {
     #logQueues = {};
     #isChain = false;
     #chatIdArrValidation = chatIdArrValidation;
-    #getme = getme;
     #sendlog = sendlog;
     #initQueue(chatIdArr) {
         for (const id of chatIdArr) {
@@ -28,7 +26,6 @@ class TgLogger {
     }
 
     constructor(token, chatIdArr, isQueue = false) {
-        this.#getme(token);
         this.#chatIdArrValidation(chatIdArr);
         if (isQueue) this.#initQueue(chatIdArr);
         this.#token = token;
