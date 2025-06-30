@@ -1,6 +1,9 @@
 # tglogger-lib
 A good solution for logging in a Telegram bot.
 
+## Warn
+Use version 1.2.2 or 1.2.4. The only difference between them is the number of exceptions that may be thrown in case of incorrect logger usage. Version 1.2.4 throws fewer exceptions.
+
 ## Get started
 ```
 npm install tglogger-lib
