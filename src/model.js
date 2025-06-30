@@ -1,6 +1,6 @@
-const { getme } = require('./helpers/getme.js');
 const { LogQueue } =require('./helpers/LogQueue.js');
-const { tokenValidation, chatIdArrValidation } = require('./helpers/validators.js');
+const { getme } = require('./helpers/getme.js');
+const { chatIdArrValidation } = require('./helpers/validators.js');
 const { sendlog } = require('./helpers/sendlog.js');
 
 class TgLogger {
@@ -17,33 +17,32 @@ class TgLogger {
         'DEBUG': true,
     }
     #logQueues = {};
-    #tokenValidation = tokenValidation;
+    #isChain = false;
     #chatIdArrValidation = chatIdArrValidation;
     #getme = getme;
     #sendlog = sendlog;
+    #initQueue(chatIdArr) {
+        for (const id of chatIdArr) {
+            this.#logQueues[id] = new LogQueue((data) => this.#sendlog(this.#token, id, data));
+        }
+    }
 
     constructor(token, chatIdArr, isQueue = false) {
-        this.#tokenValidation(token);
-        this.#chatIdArrValidation(chatIdArr);
         this.#getme(token);
-        if (isQueue) {
-            for (const id of chatIdArr) {
-                this.#logQueues[id] = new LogQueue((data) => this.#sendlog(this.#token, id, data));
-            }
-        }
-        
+        this.#chatIdArrValidation(chatIdArr);
+        if (isQueue) this.#initQueue(chatIdArr);
         this.#token = token;
         this.#chatIdArr = chatIdArr;
         this.#isQueue = isQueue;
     }
 
     setLevel(level, isEnabled) {
-        if (typeof level !== 'string') throw new Error("Level must be string");
+        if (typeof level !== 'string') throw new Error("Level must be a string");
         if (typeof isEnabled !== 'boolean') throw new Error("isEnabled must be boolean");
-        this.#levels[level] = isEnabled;
+        this.#levels[level.trim().toUpperCase()] = isEnabled;
     }
     setPrefix(prefix) {
-        if (typeof prefix !== 'string' && prefix !== null) throw new Error("Prefix must be string or null");
+        if (typeof prefix !== 'string' && prefix !== null) throw new Error("Prefix must be a string or null");
         this.#prefix = prefix;
     }
     disabled() {
@@ -52,10 +51,25 @@ class TgLogger {
     enable() {
         Object.keys(this.#levels).forEach(level => this.#levels[level] = true);
     }
+    chain() {
+        if (!this.#isChain) {
+            this.#isChain = true;
+            this.#initQueue(this.#chatIdArr);
+            return;
+        }
+        throw new Error("The chain is already open");
+    }
+    close() {
+        if (this.#isChain) {
+            this.#isChain = false;
+            return;
+        }
+        throw new Error("The chain is already closed");
+    }
     async start(message) {
         if (this.#levels['START']) {
             const msg = `[${new Date().toUTCString()}]\nSTART ${this.#prefix !== null ? this.#prefix : ""}\n${message}`;
-            if (this.#isQueue) {
+            if (this.#isChain || this.#isQueue) {
                 for (const id of this.#chatIdArr) {
                     this.#logQueues[id].add(msg);
                 }
@@ -69,7 +83,7 @@ class TgLogger {
     async end(message) {
         if (this.#levels['END']) {
             const msg = `[${new Date().toUTCString()}]\nEND ${this.#prefix !== null ? this.#prefix : ""}\n${message}`;
-            if (this.#isQueue) {
+            if (this.#isChain || this.#isQueue) {
                 for (const id of this.#chatIdArr) {
                     this.#logQueues[id].add(msg);
                 }
@@ -83,7 +97,7 @@ class TgLogger {
     async info(message) {
         if (this.#levels['INFO']) {
             const msg = `[${new Date().toUTCString()}]\nINFO ${this.#prefix !== null ? this.#prefix : ""}\n${message}`;
-            if (this.#isQueue) {
+            if (this.#isChain || this.#isQueue) {
                 for (const id of this.#chatIdArr) {
                     this.#logQueues[id].add(msg);
                 }
@@ -97,7 +111,7 @@ class TgLogger {
     async warn(message) {
         if (this.#levels['WARN']) {
             const msg = `[${new Date().toUTCString()}]\nWARN ${this.#prefix !== null ? this.#prefix : ""}\n${message}`;
-            if (this.#isQueue) {
+            if (this.#isChain || this.#isQueue) {
                 for (const id of this.#chatIdArr) {
                     this.#logQueues[id].add(msg);
                 }
@@ -111,7 +125,7 @@ class TgLogger {
     async error(message) {
         if (this.#levels['ERROR']) {
             const msg = `[${new Date().toUTCString()}]\nERROR ${this.#prefix !== null ? this.#prefix : ""}\n${message}`;
-            if (this.#isQueue) {
+            if (this.#isChain || this.#isQueue) {
                 for (const id of this.#chatIdArr) {
                     this.#logQueues[id].add(msg);
                 }
@@ -125,7 +139,7 @@ class TgLogger {
     async debug(message) {
         if (this.#levels['DEBUG']) {
             const msg = `[${new Date().toUTCString()}]\nDEBUG ${this.#prefix !== null ? this.#prefix : ""}\n${message}`;
-            if (this.#isQueue) {
+            if (this.#isChain || this.#isQueue) {
                 for (const id of this.#chatIdArr) {
                     this.#logQueues[id].add(msg);
                 }
