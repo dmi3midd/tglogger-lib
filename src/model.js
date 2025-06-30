@@ -66,7 +66,7 @@ class TgLogger {
         }
         throw new Error("The chain is already closed");
     }
-    async start(message) {
+    start(message) {
         if (this.#levels['START']) {
             const msg = `[${new Date().toUTCString()}]\nSTART ${this.#prefix !== null ? this.#prefix : ""}\n${message}`;
             if (this.#isChain || this.#isQueue) {
@@ -80,7 +80,7 @@ class TgLogger {
         }
         throw new Error("'START' is disabled");
     }
-    async end(message) {
+    end(message) {
         if (this.#levels['END']) {
             const msg = `[${new Date().toUTCString()}]\nEND ${this.#prefix !== null ? this.#prefix : ""}\n${message}`;
             if (this.#isChain || this.#isQueue) {
@@ -94,7 +94,7 @@ class TgLogger {
         }
         throw new Error("'END' is disabled");
     }
-    async info(message) {
+    info(message) {
         if (this.#levels['INFO']) {
             const msg = `[${new Date().toUTCString()}]\nINFO ${this.#prefix !== null ? this.#prefix : ""}\n${message}`;
             if (this.#isChain || this.#isQueue) {
@@ -108,7 +108,7 @@ class TgLogger {
         }
         throw new Error("'INFO' is disabled");
     }
-    async warn(message) {
+    warn(message) {
         if (this.#levels['WARN']) {
             const msg = `[${new Date().toUTCString()}]\nWARN ${this.#prefix !== null ? this.#prefix : ""}\n${message}`;
             if (this.#isChain || this.#isQueue) {
@@ -122,7 +122,7 @@ class TgLogger {
         }
         throw new Error("'WARN' is disabled");
     }
-    async error(message) {
+    error(message) {
         if (this.#levels['ERROR']) {
             const msg = `[${new Date().toUTCString()}]\nERROR ${this.#prefix !== null ? this.#prefix : ""}\n${message}`;
             if (this.#isChain || this.#isQueue) {
@@ -136,7 +136,7 @@ class TgLogger {
         }
         throw new Error("'ERROR' is disabled");
     }
-    async debug(message) {
+    debug(message) {
         if (this.#levels['DEBUG']) {
             const msg = `[${new Date().toUTCString()}]\nDEBUG ${this.#prefix !== null ? this.#prefix : ""}\n${message}`;
             if (this.#isChain || this.#isQueue) {
